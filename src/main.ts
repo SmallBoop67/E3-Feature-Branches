@@ -1,3 +1,6 @@
+import eyesUrl from "./assets/eyes.png?no-inline";
+import sweatUrl from "./assets/sweat.png?no-inline";
+
 const portrait = document.querySelector<HTMLDivElement>("#portrait")!;
 const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 
@@ -5,7 +8,10 @@ const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 const face = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 face.setAttribute("viewBox", "0 0 200 200");
 face.setAttribute("role", "img");
-face.setAttribute("aria-label", "A neutral face");
+face.setAttribute(
+  "aria-label",
+  "A nervous face with wide worried eyes and a sweat drop on the temple",
+);
 
 const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
 head.setAttribute("cx", "100");
@@ -16,28 +22,6 @@ head.setAttribute("fill", "#f3cf87");
 head.setAttribute("stroke", "#302c29");
 head.setAttribute("stroke-width", "4");
 face.append(head);
-
-const leftEye = document.createElementNS(
-  "http://www.w3.org/2000/svg",
-  "ellipse",
-);
-leftEye.setAttribute("cx", "72");
-leftEye.setAttribute("cy", "82");
-leftEye.setAttribute("rx", "6");
-leftEye.setAttribute("ry", "9");
-leftEye.setAttribute("fill", "#302c29");
-face.append(leftEye);
-
-const rightEye = document.createElementNS(
-  "http://www.w3.org/2000/svg",
-  "ellipse",
-);
-rightEye.setAttribute("cx", "128");
-rightEye.setAttribute("cy", "82");
-rightEye.setAttribute("rx", "6");
-rightEye.setAttribute("ry", "9");
-rightEye.setAttribute("fill", "#302c29");
-face.append(rightEye);
 
 const nose = document.createElementNS("http://www.w3.org/2000/svg", "line");
 nose.setAttribute("x1", "100");
@@ -58,6 +42,28 @@ mouth.setAttribute("stroke", "#302c29");
 mouth.setAttribute("stroke-width", "4");
 mouth.setAttribute("stroke-linecap", "round");
 face.append(mouth);
+
+const eyesImage = document.createElementNS(
+  "http://www.w3.org/2000/svg",
+  "image",
+);
+eyesImage.setAttribute("href", eyesUrl);
+eyesImage.setAttribute("x", "40");
+eyesImage.setAttribute("y", "22");
+eyesImage.setAttribute("width", "120");
+eyesImage.setAttribute("height", "120");
+face.append(eyesImage);
+
+const sweatImage = document.createElementNS(
+  "http://www.w3.org/2000/svg",
+  "image",
+);
+sweatImage.setAttribute("href", sweatUrl);
+sweatImage.setAttribute("x", "125");
+sweatImage.setAttribute("y", "35");
+sweatImage.setAttribute("width", "40");
+sweatImage.setAttribute("height", "40");
+face.append(sweatImage);
 
 portrait.append(face);
 
