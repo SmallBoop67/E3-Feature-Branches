@@ -5,7 +5,10 @@ const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 const face = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 face.setAttribute("viewBox", "0 0 200 200");
 face.setAttribute("role", "img");
-face.setAttribute("aria-label", "A neutral face");
+face.setAttribute(
+  "aria-label",
+  "A nervous face with a spiky halo around the head and many freckles across the cheeks and nose",
+);
 
 const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
 head.setAttribute("cx", "100");
@@ -69,3 +72,58 @@ spin.addEventListener("click", () => {
     { duration: 800, easing: "ease-in-out" },
   );
 });
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function shape(
+  tag: string,
+  attrs: Record<string, string | number>,
+  behind = false,
+) {
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+  if (behind) face.prepend(el);
+  else face.append(el);
+  return el;
+}
+
+// Small seeded random generator so the freckles are the same on every Spin.
+let seed = 7;
+function rand() {
+  seed = (seed * 16807) % 2147483647;
+  return seed / 2147483647;
+}
+
+// Freckles: 150 circles in three clusters (two cheeks, one nose)
+const clusters = [
+  { cx: 65, cy: 118, spread: 22, count: 55 },
+  { cx: 135, cy: 118, spread: 22, count: 55 },
+  { cx: 100, cy: 105, spread: 14, count: 40 },
+];
+for (const c of clusters) {
+  for (let i = 0; i < c.count; i++) {
+    const angle = rand() * Math.PI * 2;
+    const dist = c.spread * Math.pow(rand(), 1.5);
+    shape("circle", {
+      cx: c.cx + dist * Math.cos(angle),
+      cy: c.cy + dist * Math.sin(angle),
+      r: 1.2 + rand() * 1.3,
+      fill: "#8a4b2a",
+      opacity: 0.8,
+    });
+  }
+}
+
+// Spiky halo: 40 thin triangles pointing outward, alternating long and short
+const SPIKES = 40;
+for (let i = 0; i < SPIKES; i++) {
+  const a = (i / SPIKES) * Math.PI * 2;
+  const half = (Math.PI / SPIKES) * 0.6;
+  const reach = i % 2 === 0 ? 12 : 7; // alternate long and short
+  const pt = (grow: number, ang: number) =>
+    `${100 + (78 + grow) * Math.cos(ang)},${100 + (86 + grow) * Math.sin(ang)}`;
+  shape("polygon", {
+    points: `${pt(-2, a - half)} ${pt(reach, a)} ${pt(-2, a + half)}`,
+    fill: "#563b67",
+  }, true);
+}
